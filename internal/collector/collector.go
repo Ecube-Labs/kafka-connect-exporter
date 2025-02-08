@@ -45,7 +45,7 @@ func New() *collector {
 }
 
 // Get a list of kafka connect connectors from the given host
-func (c *collector) GetConnectors(host string) ([]string, error) {
+func (c *collector) getConnectors(host string) ([]string, error) {
 	response, err := c.client.Get(fmt.Sprintf("%s/connectors", host))
 	if err != nil {
 		return nil, applicationError.New(http.StatusInternalServerError, err.Error(), "")
@@ -74,7 +74,7 @@ func (c *collector) GetConnectors(host string) ([]string, error) {
 }
 
 // Retrieve the status of a kafka connect connector
-func (c *collector) GetConnectorStatus(host string, connector string) (*connectorStatus, error) {
+func (c *collector) getConnectorStatus(host string, connector string) (*connectorStatus, error) {
 	encodedConnectorName := url.PathEscape(connector)
 	response, err := c.client.Get(fmt.Sprintf("%s/connectors/%s/status", host, encodedConnectorName))
 	if err != nil {
@@ -117,7 +117,7 @@ func (c *collector) Collect(ch chan<- prometheus.Metric) {
 		go func(h string) {
 			defer wg.Done()
 
-			connectors, err := c.GetConnectors(h)
+			connectors, err := c.getConnectors(h)
 			if err != nil {
 				logger.Log("error", applicationError.UnWrap(err).Stack)
 				return
@@ -125,7 +125,7 @@ func (c *collector) Collect(ch chan<- prometheus.Metric) {
 			ch <- prometheus.MustNewConstMetric(c.descConnectorCount, prometheus.GaugeValue, float64(len(connectors)), h)
 
 			for _, connector := range connectors {
-				status, err := c.GetConnectorStatus(h, connector)
+				status, err := c.getConnectorStatus(h, connector)
 				if err != nil {
 					logger.Log("error", applicationError.UnWrap(err).Stack)
 					continue

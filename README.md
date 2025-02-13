@@ -81,8 +81,9 @@ docker pull ecubelabs/kafka-connect-exporter:latest
 ```bash
 docker run --rm -p 9113:9113 \
   -e PORT=9113 \
-  -e PULLING_ENDPOINT="/metrics" \
+  -e METRICS_ENDPOINT="/metrics" \
   -e KAFKA_CONNECT_HOSTS="http://<kafka-connect-host>:8083" \
+  -e HEALTH_CHECK_ENDPOINT="/health" \
   ecubelabs/kafka-connect-exporter:latest
 ```
 
@@ -101,8 +102,9 @@ services:
       - "9113:9113"
     environment:
       - PORT=9113
-      - PULLING_ENDPOINT=/metrics
+      - METRICS_ENDPOINT=/metrics
       - KAFKA_CONNECT_HOSTS=http://<kafka-connect-api-host>:8083
+      - HEALTH_CHECK_ENDPOINT=/health
 ```
 
 2. Start kafka-connect-exporter with following command:
@@ -143,10 +145,12 @@ spec:
           env:
             - name: PORT
               value: "9113"
-            - name: PULLING_ENDPOINT
+            - name: METRICS_ENDPOINT
               value: "/metrics"
             - name: KAFKA_CONNECT_HOSTS
               value: "http://<kafka-connect-host1>:8083,http://<kafka-connect-host2>:8083"
+            - name: HEALTH_CHECK_ENDPOINT
+              value: "/health"
 ```
 
 2. Then apply it with:

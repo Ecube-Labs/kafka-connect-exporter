@@ -79,7 +79,7 @@ func TestGetConnectorStatus(t *testing.T) {
 						State    string `json:"state"`
 						WorkerID string `json:"worker_id"`
 					}{State: "RUNNING", WorkerID: "123"},
-					Tasks: []taskStatus{
+					Tasks: []connectorTaskStatus{
 						{ID: 1, State: "RUNNING", WorkerID: "123", Trace: "trace1"},
 					},
 				}
@@ -104,7 +104,7 @@ func TestGetConnectorStatus(t *testing.T) {
 			State    string `json:"state"`
 			WorkerID string `json:"worker_id"`
 		}{State: "RUNNING", WorkerID: "123"},
-			Tasks: []taskStatus{{ID: 1, State: "RUNNING", WorkerID: "123", Trace: "trace1"}}}, status) // Compare this snippet from internal/collector/types.go:
+			Tasks: []connectorTaskStatus{{ID: 1, State: "RUNNING", WorkerID: "123", Trace: "trace1"}}}, status) // Compare this snippet from internal/collector/types.go:
 	})
 	t.Run("Should return an error when the request fails", func(t *testing.T) {
 		roundTripper := &mockRoundTripper{

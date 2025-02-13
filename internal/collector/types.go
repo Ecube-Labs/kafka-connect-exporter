@@ -6,10 +6,10 @@ type connectorStatus struct {
 		State    string `json:"state"`
 		WorkerID string `json:"worker_id"`
 	} `json:"connector"`
-	Tasks []taskStatus `json:"tasks"`
+	Tasks []connectorTaskStatus `json:"tasks"`
 }
 
-type taskStatus struct {
+type connectorTaskStatus struct {
 	ID       int    `json:"id"`
 	State    string `json:"state"`
 	WorkerID string `json:"worker_id"`

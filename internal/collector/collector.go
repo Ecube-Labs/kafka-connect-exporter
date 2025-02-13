@@ -35,12 +35,12 @@ func New() *collector {
 		client: &http.Client{
 			Timeout: 10 * time.Second,
 		},
-		descUnassigned:     prometheus.NewDesc(prefix+"_unassigned", "Kafka Connect Connector Unassigned Task Count", labels, nil),
-		descRunning:        prometheus.NewDesc(prefix+"_running", "Kafka Connect Connector Running Task Count", labels, nil),
-		descFailed:         prometheus.NewDesc(prefix+"_failed", "Kafka Connect Connector Failed Task Count", labels, nil),
-		descPaused:         prometheus.NewDesc(prefix+"_paused", "Kafka Connect Connector Paused Task Count", labels, nil),
-		descTaskCount:      prometheus.NewDesc(prefix+"_task_total", "Kafka Connect Connector Total Task Count", labels, nil),
-		descConnectorCount: prometheus.NewDesc(prefix+"_total", "Kafka Connect Connector Total Count", []string{"host"}, nil),
+		descRunning:        prometheus.NewDesc(prefix+"_running_total", "Total number of tasks in the `RUNNING` state.", labels, nil),
+		descFailed:         prometheus.NewDesc(prefix+"_failed_total", "Total number of tasks in the `PAUSED` state (i.e., administratively paused).", labels, nil),
+		descPaused:         prometheus.NewDesc(prefix+"_paused_total", "Total number of paused tasks for the Kafka Connect connector", labels, nil),
+		descUnassigned:     prometheus.NewDesc(prefix+"_unassigned_total", "Total number of tasks in the `PAUSED` state (i.e., not assigned to any worker.)", labels, nil),
+		descTaskCount:      prometheus.NewDesc(prefix+"_task_total", "Total number of tasks for the Kafka Connect connector", labels, nil),
+		descConnectorCount: prometheus.NewDesc(prefix+"_total", "Total number of tasks for the connector.", []string{"host"}, nil),
 	}
 }
 
@@ -110,7 +110,7 @@ func (c *collector) Describe(_ chan<- *prometheus.Desc) {}
 func (c *collector) Collect(ch chan<- prometheus.Metric) {
 	var wg sync.WaitGroup
 
-	// 각 호스트마다 병렬로 데이터 수집
+	// collect metrics for each kafka connect host
 	for _, host := range config.KafkaConnectHosts {
 		wg.Add(1)
 

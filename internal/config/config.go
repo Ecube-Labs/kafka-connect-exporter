@@ -14,6 +14,6 @@ func getEnvWithDefault(key, fallback string) string {
 
 var (
 	Port              = getEnvWithDefault("PORT", "9113")
-	PullingEndpoint   = getEnvWithDefault("PULLING_ENDPOINT", "/metrics")
+	MetricsEndpoint   = getEnvWithDefault("METRICS_ENDPOINT", "/metrics")
 	KafkaConnectHosts = strings.Split(getEnvWithDefault("KAFKA_CONNECT_HOSTS", "http://localhost:4444"), ",")
 )

@@ -14,7 +14,7 @@ import (
 
 func main() {
 	prometheus.MustRegister(collector.New())
-	http.Handle(config.PullingEndpoint, promhttp.Handler())
+	http.Handle(config.MetricsEndpoint, promhttp.Handler())
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("OK"))

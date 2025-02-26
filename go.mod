@@ -1,4 +1,4 @@
-module github.com/Ecube-labs/kafka-connect-exporter
+module github.com/Ecube-Labs/kafka-connect-exporter
 
 go 1.23.4
 

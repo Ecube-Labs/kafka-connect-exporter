@@ -60,13 +60,8 @@ func (c *collector) getConnectors(host string) ([]string, error) {
 		return nil, applicationError.New(response.StatusCode, fmt.Sprintf("Failed to get connectors. status: %d, body: %s", response.StatusCode, string(body)), "")
 	}
 
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		return nil, applicationError.New(http.StatusInternalServerError, err.Error(), "")
-	}
-
 	var connectors []string
-	if err := json.Unmarshal(body, &connectors); err != nil {
+	if err := json.NewDecoder(response.Body).Decode(&connectors); err != nil {
 		return nil, applicationError.New(http.StatusInternalServerError, err.Error(), "")
 	}
 
@@ -90,13 +85,8 @@ func (c *collector) getConnectorStatus(host string, connector string) (*connecto
 		return nil, applicationError.New(response.StatusCode, fmt.Sprintf("Failed to get connector status. status: %d, body: %s", response.StatusCode, string(body)), "")
 	}
 
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		return nil, applicationError.New(http.StatusInternalServerError, err.Error(), "")
-	}
-
 	var status connectorStatus
-	if err := json.Unmarshal(body, &status); err != nil {
+	if err := json.NewDecoder(response.Body).Decode(&status); err != nil {
 		return nil, applicationError.New(http.StatusInternalServerError, err.Error(), "")
 	}
 

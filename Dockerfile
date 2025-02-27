@@ -1,10 +1,16 @@
-FROM golang:1.23.4-alpine
+FROM golang:1.23.4-alpine AS builder
 
-WORKDIR /
+WORKDIR /app
 
 COPY . .
 
-RUN CGO_ENABLED=0 go build -o exporter ./cmd/exporter
+RUN CGO_ENABLED=0 go build -ldflags="-w -s" -o exporter ./cmd/exporter
+
+FROM alpine:latest
+
+WORKDIR /
+
+COPY --from=builder /app/exporter .
 
 ENV PORT=9113
 EXPOSE 9113

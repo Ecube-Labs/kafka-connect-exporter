@@ -35,10 +35,10 @@ func New() *collector {
 		client: &http.Client{
 			Timeout: 10 * time.Second,
 		},
-		descRunning:        prometheus.NewDesc(prefix+"_running_total", "Total number of tasks in the `RUNNING` state.", labels, nil),
-		descFailed:         prometheus.NewDesc(prefix+"_failed_total", "Total number of tasks in the `PAUSED` state (i.e., administratively paused).", labels, nil),
+		descRunning:        prometheus.NewDesc(prefix+"_running_total", "Total number of tasks in the `RUNNING` state", labels, nil),
+		descFailed:         prometheus.NewDesc(prefix+"_failed_total", "Total number of tasks in the `FAILED` state (e.g., due to exceptions reported in status)", labels, nil),
 		descPaused:         prometheus.NewDesc(prefix+"_paused_total", "Total number of paused tasks for the Kafka Connect connector", labels, nil),
-		descUnassigned:     prometheus.NewDesc(prefix+"_unassigned_total", "Total number of tasks in the `PAUSED` state (i.e., not assigned to any worker.)", labels, nil),
+		descUnassigned:     prometheus.NewDesc(prefix+"_unassigned_total", "Total number of tasks in the `Unassigned` state (i.e., not assigned to any worker.)", labels, nil),
 		descTaskCount:      prometheus.NewDesc(prefix+"_task_total", "Total number of tasks for the Kafka Connect connector", labels, nil),
 		descConnectorCount: prometheus.NewDesc(prefix+"_total", "Total number of tasks for the connector.", []string{"host"}, nil),
 	}
@@ -60,13 +60,8 @@ func (c *collector) getConnectors(host string) ([]string, error) {
 		return nil, applicationError.New(response.StatusCode, fmt.Sprintf("Failed to get connectors. status: %d, body: %s", response.StatusCode, string(body)), "")
 	}
 
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		return nil, applicationError.New(http.StatusInternalServerError, err.Error(), "")
-	}
-
 	var connectors []string
-	if err := json.Unmarshal(body, &connectors); err != nil {
+	if err := json.NewDecoder(response.Body).Decode(&connectors); err != nil {
 		return nil, applicationError.New(http.StatusInternalServerError, err.Error(), "")
 	}
 
@@ -90,13 +85,8 @@ func (c *collector) getConnectorStatus(host string, connector string) (*connecto
 		return nil, applicationError.New(response.StatusCode, fmt.Sprintf("Failed to get connector status. status: %d, body: %s", response.StatusCode, string(body)), "")
 	}
 
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		return nil, applicationError.New(http.StatusInternalServerError, err.Error(), "")
-	}
-
 	var status connectorStatus
-	if err := json.Unmarshal(body, &status); err != nil {
+	if err := json.NewDecoder(response.Body).Decode(&status); err != nil {
 		return nil, applicationError.New(http.StatusInternalServerError, err.Error(), "")
 	}
 

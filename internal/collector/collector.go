@@ -35,10 +35,10 @@ func New() *collector {
 		client: &http.Client{
 			Timeout: 10 * time.Second,
 		},
-		descRunning:        prometheus.NewDesc(prefix+"_running_total", "Total number of tasks in the `RUNNING` state.", labels, nil),
-		descFailed:         prometheus.NewDesc(prefix+"_failed_total", "Total number of tasks in the `PAUSED` state (i.e., administratively paused).", labels, nil),
+		descRunning:        prometheus.NewDesc(prefix+"_running_total", "Total number of tasks in the `RUNNING` state", labels, nil),
+		descFailed:         prometheus.NewDesc(prefix+"_failed_total", "Total number of tasks in the `FAILED` state (e.g., due to exceptions reported in status)", labels, nil),
 		descPaused:         prometheus.NewDesc(prefix+"_paused_total", "Total number of paused tasks for the Kafka Connect connector", labels, nil),
-		descUnassigned:     prometheus.NewDesc(prefix+"_unassigned_total", "Total number of tasks in the `PAUSED` state (i.e., not assigned to any worker.)", labels, nil),
+		descUnassigned:     prometheus.NewDesc(prefix+"_unassigned_total", "Total number of tasks in the `Unassigned` state (i.e., not assigned to any worker.)", labels, nil),
 		descTaskCount:      prometheus.NewDesc(prefix+"_task_total", "Total number of tasks for the Kafka Connect connector", labels, nil),
 		descConnectorCount: prometheus.NewDesc(prefix+"_total", "Total number of tasks for the connector.", []string{"host"}, nil),
 	}

@@ -9,9 +9,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Ecube-labs/kafka-connect-exporter/internal/config"
-	applicationError "github.com/Ecube-labs/kafka-connect-exporter/pkg/application-error"
-	"github.com/Ecube-labs/kafka-connect-exporter/pkg/logger"
+	"github.com/Ecube-Labs/kafka-connect-exporter/internal/config"
+	applicationError "github.com/Ecube-Labs/kafka-connect-exporter/pkg/application-error"
+	"github.com/Ecube-Labs/kafka-connect-exporter/pkg/logger"
 	"github.com/prometheus/client_golang/prometheus"
 )
 

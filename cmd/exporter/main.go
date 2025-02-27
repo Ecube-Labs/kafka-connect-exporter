@@ -5,9 +5,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Ecube-labs/kafka-connect-exporter/internal/collector"
-	"github.com/Ecube-labs/kafka-connect-exporter/internal/config"
-	"github.com/Ecube-labs/kafka-connect-exporter/pkg/logger"
+	"github.com/Ecube-Labs/kafka-connect-exporter/internal/collector"
+	"github.com/Ecube-Labs/kafka-connect-exporter/internal/config"
+	"github.com/Ecube-Labs/kafka-connect-exporter/pkg/logger"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )

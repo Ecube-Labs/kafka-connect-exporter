@@ -8,7 +8,7 @@ Whenever you find something that is not working properly, please first search th
 
 Before creating an issue, check the `Issue Template` for guidelines. Provide as much detail as possible.
 
-You can submit issues with [our issue form](https://github.com/Ecube-labs/kafka-connect-exporter/issues/new/choose)
+You can submit issues with [our issue form](https://github.com/Ecube-Labs/kafka-connect-exporter/issues/new/choose)
 
 ## Open a PR for Bugfix or Feature
 

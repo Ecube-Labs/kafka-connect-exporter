@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/Ecube-labs/kafka-connect-exporter/internal/config"
+	"github.com/Ecube-Labs/kafka-connect-exporter/internal/config"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/stretchr/testify/assert"
 )

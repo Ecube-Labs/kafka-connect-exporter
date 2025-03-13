@@ -18,9 +18,9 @@ type Server struct {
 	server *http.Server
 }
 
-func New(addr string) *Server {
+func New(port string) *Server {
 	return &Server{
-		server: &http.Server{Addr: ":" + addr},
+		server: &http.Server{Addr: ":" + port},
 	}
 }
 

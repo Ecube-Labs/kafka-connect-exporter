@@ -32,8 +32,13 @@ func TestRun(t *testing.T) {
 		addr := "localhost:" + port
 		srv := New(port, mux)
 
-		err := srv.Run()
-		assert.NoError(t, err, "server should start successfully")
+		go func() {
+			err := srv.Run()
+			if err != nil && err != http.ErrServerClosed {
+				t.Logf("server error: %v", err)
+			}
+		}()
+		time.Sleep(100 * time.Millisecond)
 
 		resp, err := http.Get("http://" + addr + testPath)
 		assert.NoError(t, err, "GET request should succeed")
@@ -55,8 +60,13 @@ func TestShutdown(t *testing.T) {
 	addr := "localhost:" + port
 	srv := New(port, mux)
 
-	err := srv.Run()
-	assert.NoError(t, err, "server should start successfully")
+	go func() {
+		err := srv.Run()
+		if err != nil && err != http.ErrServerClosed {
+			t.Logf("server error: %v", err)
+		}
+	}()
+	time.Sleep(100 * time.Millisecond)
 
 	t.Run("should shutdown the server gracefully", func(t *testing.T) {
 		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)

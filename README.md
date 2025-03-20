@@ -94,7 +94,6 @@ You can also run the exporter using Docker Compose.
 1. Create a docker-compose.yml file with the following content:
 
 ```yml
-version: "3.7"
 services:
   kafka-connect-exporter:
     image: ecubelabs/kafka-connect-exporter:latest

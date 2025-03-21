@@ -15,13 +15,14 @@ import (
 // A struct that implements the prometheus.Collector interface.
 // https://github.com/prometheus/client_golang/blob/7b39d0144166aa94cc8ce4125bcb3b0da89aad5e/prometheus/collector.go#L27
 type exporter struct {
-	collector          *collector.Collector
-	descUnassigned     *prometheus.Desc
-	descRunning        *prometheus.Desc
-	descFailed         *prometheus.Desc
-	descPaused         *prometheus.Desc
-	descTaskCount      *prometheus.Desc
-	descConnectorCount *prometheus.Desc
+	collector           *collector.Collector
+	descUnassigned      *prometheus.Desc
+	descRunning         *prometheus.Desc
+	descFailed          *prometheus.Desc
+	descPaused          *prometheus.Desc
+	descTaskCount       *prometheus.Desc
+	descConnectorCount  *prometheus.Desc
+	descConnectorStatus *prometheus.Desc
 }
 
 func New(collector *collector.Collector) *exporter {
@@ -29,13 +30,14 @@ func New(collector *collector.Collector) *exporter {
 	prefix := "kafka_connect_connector"
 
 	exporter := &exporter{
-		collector:          collector,
-		descRunning:        prometheus.NewDesc(prefix+"_running_total", "Total number of tasks in the `RUNNING` state", labels, nil),
-		descFailed:         prometheus.NewDesc(prefix+"_failed_total", "Total number of tasks in the `FAILED` state (e.g., due to exceptions reported in status)", labels, nil),
-		descPaused:         prometheus.NewDesc(prefix+"_paused_total", "Total number of paused tasks for the Kafka Connect connector", labels, nil),
-		descUnassigned:     prometheus.NewDesc(prefix+"_unassigned_total", "Total number of tasks in the `Unassigned` state (i.e., not assigned to any worker.)", labels, nil),
-		descTaskCount:      prometheus.NewDesc(prefix+"_task_total", "Total number of tasks for the Kafka Connect connector", labels, nil),
-		descConnectorCount: prometheus.NewDesc(prefix+"_total", "Total number of tasks for the connector.", []string{"host"}, nil),
+		collector:           collector,
+		descRunning:         prometheus.NewDesc(prefix+"_running_total", "Total number of tasks in the `RUNNING` state", labels, nil),
+		descFailed:          prometheus.NewDesc(prefix+"_failed_total", "Total number of tasks in the `FAILED` state (e.g., due to exceptions reported in status)", labels, nil),
+		descPaused:          prometheus.NewDesc(prefix+"_paused_total", "Total number of paused tasks for the Kafka Connect connector", labels, nil),
+		descUnassigned:      prometheus.NewDesc(prefix+"_unassigned_total", "Total number of tasks in the `Unassigned` state (i.e., not assigned to any worker.)", labels, nil),
+		descTaskCount:       prometheus.NewDesc(prefix+"_task_total", "Total number of tasks for the Kafka Connect connector", labels, nil),
+		descConnectorCount:  prometheus.NewDesc(prefix+"_total", "Total number of tasks for the connector.", []string{"host"}, nil),
+		descConnectorStatus: prometheus.NewDesc(prefix+"_status", "Status of the connector.", []string{"host", "connector", "state"}, nil),
 	}
 	prometheus.MustRegister(exporter)
 
@@ -69,6 +71,8 @@ func (e *exporter) Collect(ch chan<- prometheus.Metric) {
 					logger.Log("error", applicationError.UnWrap(err).Stack)
 					continue
 				}
+
+				ch <- prometheus.MustNewConstMetric(e.descConnectorStatus, prometheus.GaugeValue, 1, h, connector, status.Connector.State)
 
 				var unAssignedTaskCount int
 				var runningTaskCount int

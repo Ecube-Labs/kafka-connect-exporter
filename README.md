@@ -15,20 +15,26 @@ The kafka connect exporter fetches connector and task status information from co
 These metrics represent the state of tasks for each connector:
 
 - **`kafka_connect_connector_tasks_running_total`:**
-  - Total number of tasks in the `RUNNING` state.
+  - Total number of tasks in the `RUNNING` state
   - **Labels:** `connector`, `host`
 - **`kafka_connect_connector_tasks_failed_total`:**
-  - Total number of tasks in the `FAILED` state (e.g., due to exceptions reported in status).
+  - Total number of tasks in the `FAILED` state (e.g., due to exceptions reported in status)
   - **Labels:** `connector`, `host`
 - **`kafka_connect_connector_tasks_paused_total`:**
-  - Total number of tasks in the `PAUSED` state (i.e., administratively paused).
+  - Total number of tasks in the `PAUSED` state (e.g., administratively paused)
   - **Labels:** `connector`, `host`
 - **`kafka_connect_connector_tasks_unassigned_total`:**
-  - Total number of tasks in the `Unassigned` state (i.e., not assigned to any worker.)
+  - Total number of tasks in the `UNASSIGNED` state (e.g., not assigned to any worker)
   - **Labels:** `connector`, `host`
 - **`kafka_connect_connector_tasks_total`:**
-  - Total number of tasks for the connector.
+  - Total number of tasks for the connector
+  - **Labels:** `connector`, `host`
+- **`kafka_connect_connector_total`**
+  - Total number of connectors
   - **Labels:** `host`
+- **`kafka_connect_connector_status`**
+  - Status of the connector (e.g. `RUNNING`, `PAUSED`, `FAILED`)
+  - **Labels:** `host`, `connector`, `status`
 
 ##### Example
 

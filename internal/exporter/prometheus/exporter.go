@@ -33,11 +33,11 @@ func New(collector *collector.Collector) *exporter {
 		collector:           collector,
 		descRunning:         prometheus.NewDesc(prefix+"_running_total", "Total number of tasks in the `RUNNING` state", labels, nil),
 		descFailed:          prometheus.NewDesc(prefix+"_failed_total", "Total number of tasks in the `FAILED` state (e.g., due to exceptions reported in status)", labels, nil),
-		descPaused:          prometheus.NewDesc(prefix+"_paused_total", "Total number of paused tasks for the Kafka Connect connector", labels, nil),
-		descUnassigned:      prometheus.NewDesc(prefix+"_unassigned_total", "Total number of tasks in the `Unassigned` state (i.e., not assigned to any worker.)", labels, nil),
-		descTaskCount:       prometheus.NewDesc(prefix+"_task_total", "Total number of tasks for the Kafka Connect connector", labels, nil),
-		descConnectorCount:  prometheus.NewDesc(prefix+"_total", "Total number of tasks for the connector.", []string{"host"}, nil),
-		descConnectorStatus: prometheus.NewDesc(prefix+"_status", "Status of the connector.", []string{"host", "connector", "state"}, nil),
+		descPaused:          prometheus.NewDesc(prefix+"_paused_total", "Total number of tasks in the `PAUSED` state (e.g., administratively paused)", labels, nil),
+		descUnassigned:      prometheus.NewDesc(prefix+"_unassigned_total", "Total number of tasks in the `UNASSIGNED` state (e.g., not assigned to any worker)", labels, nil),
+		descTaskCount:       prometheus.NewDesc(prefix+"_task_total", "Total number of tasks for the connector", labels, nil),
+		descConnectorCount:  prometheus.NewDesc(prefix+"_total", "Total number of connectors", []string{"host"}, nil),
+		descConnectorStatus: prometheus.NewDesc(prefix+"_status", "Status of the connector (e.g. `RUNNING`, `PAUSED`, `FAILED`)", []string{"host", "connector", "status"}, nil),
 	}
 	prometheus.MustRegister(exporter)
 

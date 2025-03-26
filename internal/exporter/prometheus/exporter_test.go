@@ -66,7 +66,12 @@ func TestCollect(t *testing.T) {
 
 		exporter := New(collector.New(&http.Client{Transport: roundTripper}))
 
-		ch := make(chan prometheus.Metric, len(mockHosts)*len(mockConnectors)*5+len(mockHosts))
+		// connectorCount metrics (1 per host)
+		hostMetricTotal := len(mockHosts)
+		// connectorStatus metrics (1 per host per connector) + taskCount/taskStatus metrics (5 per host per connector)
+		connectorMetricTotal := len(mockHosts) * len(mockConnectors) * 6
+
+		ch := make(chan prometheus.Metric, hostMetricTotal+connectorMetricTotal)
 		go func() {
 			exporter.Collect(ch)
 			close(ch)
@@ -79,7 +84,7 @@ func TestCollect(t *testing.T) {
 			collectedMetrics = append(collectedMetrics, metric)
 		}
 
-		assert.Equal(t, len(mockHosts)*len(mockConnectors)*5+len(mockHosts), len(collectedMetrics))
+		assert.Equal(t, hostMetricTotal+connectorMetricTotal, len(collectedMetrics))
 	})
 
 	t.Run("Should log errors when API fails", func(t *testing.T) {
